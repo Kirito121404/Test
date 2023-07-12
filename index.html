@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>Message Sender</title>
+  <style>
+    /* Container styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    /* Message styles */
+    .message-form textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      resize: none;
+    }
+
+    .message-form button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #4267b2;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .message-list {
+      margin-top: 20px;
+    }
+
+    .message-item {
+      background-color: #f0f2f5;
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .container {
+        padding: 10px;
+      }
+    }
+  </style>
+  <script>
+    function sendMessage() {
+      var message = document.getElementById('message').value;
+      var messages = [];
+
+      // Retrieve existing messages from local storage
+      var storedMessages = localStorage.getItem('messages');
+      if (storedMessages) {
+        messages = JSON.parse(storedMessages);
+      }
+
+      // Add new message to the array
+      messages.push({
+        name: localStorage.getItem('name'),
+        message: message
+      });
+
+      // Save updated messages to local storage
+      localStorage.setItem('messages', JSON.stringify(messages));
+
+      document.getElementById('message').value = '';
+      alert('Message sent!');
+      displayMessages();
+    }
+
+    function displayMessages() {
+      var messages = [];
+
+      // Retrieve messages from local storage
+      var storedMessages = localStorage.getItem('messages');
+      if (storedMessages) {
+        messages = JSON.parse(storedMessages);
+      }
+
+      var displayElement = document.getElementById('display');
+      displayElement.innerHTML = '';
+
+      // Display each message
+      for (var i = 0; i < messages.length; i++) {
+        var message = messages[i];
+        var messageElement = document.createElement('div');
+        messageElement.className = 'message-item';
+        messageElement.innerHTML = '<strong>' + message.name + ':</strong> ' + message.message;
+        displayElement.appendChild(messageElement);
+      }
+    }
+
+    function setName() {
+      var name = prompt('Enter your name:');
+      localStorage.setItem('name', name);
+    }
+  </script>
+</head>
+<body onload="displayMessages()">
+  <div class="container">
+    <h1>Message Sender</h1>
+    <div class="message-form">
+      <textarea id="message" rows="4" placeholder="Enter your message"></textarea>
+      <button onclick="sendMessage()">Send Message</button>
+    </div>
+    <div class="message-list" id="display"></div>
+    <button onclick="setName()">Set Name</button>
+  </div>
+</body>
+</html>
